@@ -1,0 +1,3 @@
+package com.michael.notchcommand.playstore
+
+interface PlayStoreScreenshotTests

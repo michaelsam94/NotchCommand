@@ -1,0 +1,33 @@
+package com.michael.notchcommand.playstore
+
+import androidx.compose.runtime.Composable
+import com.michael.notchcommand.R
+import com.michael.notchcommand.ui.theme.MyApplicationTheme
+import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
+import com.github.takahirom.roborazzi.RoborazziComposeOptions
+import com.github.takahirom.roborazzi.RoborazziOptions
+import com.github.takahirom.roborazzi.activityTheme
+import com.github.takahirom.roborazzi.captureRoboImage
+
+private val playStoreCaptureOptions = RoborazziOptions(
+  captureType = RoborazziOptions.CaptureType.Screenshot(),
+)
+
+@OptIn(ExperimentalRoborazziApi::class)
+fun capturePlayStoreImage(
+  outputPath: String,
+  content: @Composable () -> Unit,
+) {
+  captureRoboImage(
+    filePath = "../play-store/$outputPath",
+    roborazziOptions = playStoreCaptureOptions,
+    roborazziComposeOptions = RoborazziComposeOptions {
+      activityTheme(R.style.Theme_MyApplication)
+    },
+    content = {
+      MyApplicationTheme(dynamicColor = false) {
+        content()
+      }
+    },
+  )
+}
