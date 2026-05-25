@@ -1,0 +1,6 @@
+{
+  "name": "NotchCommand",
+  "description": "An interactive shortcut and status visualizer ring positioned precisely around your device's punch-hole front camera.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
