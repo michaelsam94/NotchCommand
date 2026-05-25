@@ -66,6 +66,7 @@ fun SettingsScreen(
     var isOverlayGranted by remember { mutableStateOf(Settings.canDrawOverlays(context)) }
     var isAccessibilityGranted by remember { mutableStateOf(NotchAccessibilityService.isServiceRunning) }
     var isServiceRunning by remember { mutableStateOf(NotchOverlayService.isServiceRunning) }
+    var showAccessibilityDisclosure by remember { mutableStateOf(false) }
 
     // Dropdown expanded states
     var singleExpanded by remember { mutableStateOf(initialSingleExpanded) }
@@ -130,7 +131,7 @@ fun SettingsScreen(
                                 handleServiceToggle(context, isOverlayGranted, isServiceRunning)
                             },
                             onRequestOverlay = { requestOverlayPermission(context) },
-                            onRequestAccessibility = { requestAccessibilityPermission(context) }
+                            onRequestAccessibility = { showAccessibilityDisclosure = true }
                         )
 
                         CalibrationPanel(
@@ -186,7 +187,7 @@ fun SettingsScreen(
                             handleServiceToggle(context, isOverlayGranted, isServiceRunning)
                         },
                         onRequestOverlay = { requestOverlayPermission(context) },
-                        onRequestAccessibility = { requestAccessibilityPermission(context) }
+                        onRequestAccessibility = { showAccessibilityDisclosure = true }
                     )
 
                     CalibrationPanel(
@@ -221,6 +222,55 @@ fun SettingsScreen(
                 }
             }
         }
+    }
+
+    if (showAccessibilityDisclosure) {
+        AlertDialog(
+            onDismissRequest = { showAccessibilityDisclosure = false },
+            title = {
+                Text(
+                    text = "Accessibility Service Disclosure",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "NotchCommand requires Accessibility Service permission to enable gestures. When you tap or long-press the camera notch area, the app uses this API to execute standard system actions on your behalf:",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = "• Go Back\n• Go Home\n• Open Notifications Shade\n• Open Quick Settings\n• Take Screenshots",
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                    Text(
+                        text = "Privacy Statement:\nWe do NOT track, collect, or share any personal information, screen content, or sensitive user data. All actions are executed locally on your device with zero network transmission.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showAccessibilityDisclosure = false
+                        requestAccessibilityPermission(context)
+                    }
+                ) {
+                    Text("Agree & Enable")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showAccessibilityDisclosure = false }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }
 
